@@ -1,2 +1,2 @@
 language: python
-script: python convert-to-guetzli.py || if [ $? -eq 1 ]; then (exit 0); fi
+script: python convert-to-guetzli.py || if [ $? -eq 10 ]; then (exit 0); fi
