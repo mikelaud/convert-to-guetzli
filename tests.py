@@ -48,10 +48,14 @@ class Test(unittest.TestCase):
 
     def testArguments(self):
         scriptName = 'convert_to_guetzli.py'
-        imageDir = 'image_dir'
-        argv = [scriptName, imageDir]
+        imagesDir = 'image_dir'
+        argv = [scriptName, imagesDir]
         arguments = ctg.Arguments(argv)
+        self.assertEqual(len(argv), arguments.getCount())
+        self.assertTrue(arguments.isAll())
         self.assertEqual(scriptName, arguments.getScriptName())
+        self.assertEqual(imagesDir, arguments.getImagesDirectory())
+        self.assertContains(arguments.getHelp(), scriptName)
 
 if __name__ == '__main__':
     unittest.main()
