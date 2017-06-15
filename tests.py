@@ -38,11 +38,20 @@ import unittest
 import convert_to_guetzli as ctg
 
 class Test(unittest.TestCase):
+
     def testApplication(self):
-        application = ctg.Application(['convert_to_guetzli.py'])
+        argv = ['convert_to_guetzli.py']
+        application = ctg.Application(argv)
         with self.assertRaises(SystemExit) as systemExit:
             application.execute()
         self.assertEqual(10, systemExit.exception.code)
+
+    def testArguments(self):
+        scriptName = 'convert_to_guetzli.py'
+        imageDir = 'image_dir'
+        argv = [scriptName, imageDir]
+        arguments = ctg.Arguments(argv)
+        self.assertEqual(scriptName, arguments.getScriptName())
 
 if __name__ == '__main__':
     unittest.main()
