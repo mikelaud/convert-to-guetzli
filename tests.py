@@ -35,10 +35,11 @@
 ================================================================================
 '''
 import unittest
+import convert-to-guetzli
 
 class Test(unittest.TestCase):
-    def test(self):
-        pass
+    def testApplication(self):
+        self.assertEqual(10, Application(['convert-to-guetzli.py']).execute())
 
 if __name__ == '__main__':
     unittest.main()
