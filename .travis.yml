@@ -1,0 +1,2 @@
+language: python
+script: python convert-to-guetzli.py
