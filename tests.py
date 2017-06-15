@@ -40,7 +40,9 @@ import convert_to_guetzli as ctg
 class Test(unittest.TestCase):
     def testApplication(self):
         application = ctg.Application(['convert_to_guetzli.py'])
-        self.assertEqual(10, application.execute())
+        with self.assertRaises(SystemExit) as systemExit:
+            application.execute()
+        self.assertEqual(10, systemExit.exception.code)
 
 if __name__ == '__main__':
     unittest.main()
