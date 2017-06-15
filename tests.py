@@ -39,13 +39,6 @@ import convert_to_guetzli as ctg
 
 class Test(unittest.TestCase):
 
-    def testApplication(self):
-        argv = ['convert_to_guetzli.py']
-        application = ctg.Application(argv)
-        with self.assertRaises(SystemExit) as systemExit:
-            application.execute()
-        self.assertEqual(10, systemExit.exception.code)
-
     def testArguments(self):
         scriptName = 'convert_to_guetzli.py'
         imagesDir = 'image_dir'
@@ -55,7 +48,15 @@ class Test(unittest.TestCase):
         self.assertTrue(arguments.isAll())
         self.assertEqual(scriptName, arguments.getScriptName())
         self.assertEqual(imagesDir, arguments.getImagesDirectory())
-        self.assertContains(arguments.getHelp(), scriptName)
+        self.assertIn(scriptName, arguments.getHelp())
+
+    def testApplication(self):
+        scriptName = 'convert_to_guetzli.py'
+        argv = [scriptName]
+        application = ctg.Application(argv)
+        with self.assertRaises(SystemExit) as systemExit:
+            application.execute()
+        self.assertEqual(10, systemExit.exception.code)
 
 if __name__ == '__main__':
     unittest.main()
