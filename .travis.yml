@@ -1,2 +1,15 @@
+sudo: false
+
 language: python
-script: python convert-to-guetzli.py || if [ $? -eq 10 ]; then (exit 0); fi
+
+python:
+  - 2.7
+
+install:
+  - pip install codecov
+
+script:
+  - python convert-to-guetzli.py || if [ $? -eq 10 ]; then (exit 0); fi
+
+after_success:
+  - codecov
