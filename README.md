@@ -8,4 +8,4 @@
 4) Guetzli description2: https://opensource.googleblog.com/2017/03/guetzli-new-open-source-jpeg-encoder.html
 5) Wikipedia: https://en.wikipedia.org/wiki/Guetzli
 
-![convert-to-guetzli](/convert-to-guetzli.png?raw=true "convert-to-guetzli")
+![convert-to-guetzli](/convert_to_guetzli.png?raw=true "convert-to-guetzli")
