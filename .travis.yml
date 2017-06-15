@@ -10,6 +10,7 @@ install:
 
 script:
   - python convert-to-guetzli.py || if [ $? -eq 10 ]; then (exit 0); fi
+  - nosetest --with-coverage
 
 after_success:
   - codecov
