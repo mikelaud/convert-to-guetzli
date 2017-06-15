@@ -1,4 +1,6 @@
-# convert-to-guetzli [![Build Status](https://travis-ci.org/mikelaud/convert-to-guetzli.svg?branch=master)](https://travis-ci.org/mikelaud/convert-to-guetzli)
+# convert-to-guetzli
+[![Build Status](https://travis-ci.org/mikelaud/convert-to-guetzli.svg?branch=master)](https://travis-ci.org/mikelaud/convert-to-guetzli)
+[![codecov](https://codecov.io/gh/mikelaud/convert-to-guetzli/branch/master/graph/badge.svg)](https://codecov.io/gh/mikelaud/convert-to-guetzli)
 
 1) "convert-to-guetzli" automation software
 2) Powered by Guetzli: https://github.com/google/guetzli
