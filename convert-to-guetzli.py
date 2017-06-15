@@ -187,9 +187,9 @@ class Application:
     def execute(self):
         if not self.__arguments.isAll():
             print self.__arguments.getHelp()
-            exit(1)
+            exit(10)
         if not self.__checkDirectory(self.__arguments.getImagesDirectory()):
-            exit(2)
+            exit(20)
         self.__convertor.execute()
 
 def main(argv):
