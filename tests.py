@@ -41,7 +41,7 @@ class Test(unittest.TestCase):
 
     def testArguments(self):
         scriptName = 'convert_to_guetzli.py'
-        imagesDir = 'image_dir'
+        imagesDir = 'images_dir'
         argv = [scriptName, imagesDir]
         arguments = ctg.Arguments(argv)
         self.assertEqual(len(argv), arguments.getCount())
