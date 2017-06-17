@@ -39,6 +39,7 @@ import glob, os, subprocess, sys, time
 class GraphicsMagick:
     @staticmethod
     def getDimensions(imagePath):
+        print 'gm.imagePath: {}'.format(imagePath)
         def __getByIndex(dimensions, index):
             return int(0 if index >= len(dimensions) else dimensions[index])
         dimensions = subprocess.check_output(['gm', 'identify', '-format', '%wx%h', imagePath]).rstrip().split('x')
@@ -47,6 +48,7 @@ class GraphicsMagick:
         return width, height
     @staticmethod  
     def resize(imagePath, outputPath , width, height):
+        print 'gm.imagePath: {}'.format(imagePath)
         subprocess.check_call(['gm', 'convert', imagePath, '-resize', '%sx%s' % (width,height), '+profile', '*', outputPath])
 
 class Arguments:
