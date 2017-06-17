@@ -40,7 +40,8 @@ import convert_to_guetzli as ctg
 class Test(unittest.TestCase):
 
     def testGraphicsMagick_getDimensions(self):
-        imagePath = os.path.abspath('convert-to-guetzli.png')
+        #imagePath = os.path.abspath('convert-to-guetzli.png')
+        imagePath = os.path.join(os.path.dirname(__file__), 'convert-to-guetzli.png') 
         print 'imagePath: {}'.format(imagePath)
         width, height = ctg.GraphicsMagick.getDimensions(imagePath)
         self.assertEqual(477, width)
