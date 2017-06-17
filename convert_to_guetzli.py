@@ -36,56 +36,18 @@
 '''
 import glob, os, subprocess, sys, time
 
-class Image:
-    def __splitFilename(self, filename):
-        parts = filename.split('.')
-        name = filename if len(parts) <= 1 else filename[:-len(parts[-1])-1]
-        extention = '' if len(parts) <= 1 else parts[-1]
-        return name, extention
-    def __initDimensions(self):
+class GraphicsMagick:
+    @staticmethod
+    def getDimensions(imagePath):
         def __getByIndex(dimensions, index):
             return int(0 if index >= len(dimensions) else dimensions[index])
-        if not self.__width or not self.__height:
-            dimensions = subprocess.check_output(['gm', 'identify', '-format', '%wx%h', self.getPath()]).rstrip().split('x')
-            self.__width = __getByIndex(dimensions, 0)
-            self.__height = __getByIndex(dimensions, 1)
-    def __init__(self, path):
-        self.__path = path
-        self.__filename = os.path.basename(path)
-        self.__name, self.__extention = self.__splitFilename(self.__filename)
-        self.__width = None
-        self.__height = None
-    def getPath(self):
-        return self.__path
-    def getFilename(self):
-        return self.__filename
-    def getName(self):
-        return self.__name
-    def getExtention(self):
-        return self.__extention
-    def getWidth(self):
-        self.__initDimensions()
-        return self.__width
-    def getHeigth(self):
-        self.__initDimensions()
-        return self.__height
-    def resizeTo(self, outputDir, downscaleFactor):
-        outputName = self.getName() + '.png'
-        outputPath = os.path.join(outputDir, outputName)
-        inputPath = self.getPath()
-        w = self.getWidth() / downscaleFactor
-        h = self.getHeigth() / downscaleFactor
-        subprocess.check_call(['gm', 'convert', inputPath, '-resize', '%sx%s' % (w,h), '+profile', '*', outputPath])
-        return outputPath
-    def convertToGuetzli(self, outputDir):
-        outputName = self.getName() + '.jpg'
-        outputPath = os.path.join(outputDir, outputName)
-        inputPath = self.getPath()
-        subprocess.check_call(['guetzli', '--quality', '84', inputPath, outputPath])
-    def __str__(self):
-        w = self.getWidth()
-        h = self.getHeigth()
-        return '{} => 1) {} {} => 2) {} {} => 4) {} {} => 8) {} {}'.format(self.getFilename(), w, h, w/2, h/2, w/4, h/4, w/8, h/8)
+        dimensions = subprocess.check_output(['gm', 'identify', '-format', '%wx%h', imagePath]).rstrip().split('x')
+        width = __getByIndex(dimensions, 0)
+        height = __getByIndex(dimensions, 1)
+        return width, height
+    @staticmethod  
+    def resize(imagePath, outputPath , width, height):
+        subprocess.check_call(['gm', 'convert', imagePath, '-resize', '%sx%s' % (width,height), '+profile', '*', outputPath])
 
 class Arguments:
     def __init__(self, argv):
@@ -105,6 +67,53 @@ class Arguments:
         return self.__imagesDirectory
     def getHelp(self):
         return 'Usage: {} <directory_with_images>'.format(self.getScriptName())
+
+class Image:
+    def __splitFilename(self, filename):
+        parts = filename.split('.')
+        name = filename if len(parts) <= 1 else filename[:-len(parts[-1])-1]
+        extention = '' if len(parts) <= 1 else parts[-1]
+        return name, extention
+    def __initDimensions(self):
+        if not self.__width or not self.__height:
+            self.__width, self.__height = GraphicsMagick.getDimensions(self.getPath())
+    def __init__(self, path):
+        self.__path = path
+        self.__filename = os.path.basename(path)
+        self.__name, self.__extention = self.__splitFilename(self.__filename)
+        self.__width = None
+        self.__height = None
+    def getPath(self):
+        return self.__path
+    def getFilename(self):
+        return self.__filename
+    def getName(self):
+        return self.__name
+    def getExtention(self):
+        return self.__extention
+    def getWidth(self):
+        self.__initDimensions()
+        return self.__width
+    def getHeight(self):
+        self.__initDimensions()
+        return self.__height
+    def resizeTo(self, outputDir, downscaleFactor):
+        outputName = self.getName() + '.png'
+        outputPath = os.path.join(outputDir, outputName)
+        inputPath = self.getPath()
+        newWidth = self.getWidth() / downscaleFactor
+        newHeigth = self.getHeight() / downscaleFactor
+        GraphicsMagick.resize(inputPath, outputPath, newWidth, newHeigth)
+        return outputPath
+    def convertToGuetzli(self, outputDir):
+        outputName = self.getName() + '.jpg'
+        outputPath = os.path.join(outputDir, outputName)
+        inputPath = self.getPath()
+        subprocess.check_call(['guetzli', '--quality', '84', inputPath, outputPath])
+    def __str__(self):
+        w = self.getWidth()
+        h = self.getHeight()
+        return '{} => 1) {} {} => 2) {} {} => 4) {} {} => 8) {} {}'.format(self.getFilename(), w, h, w/2, h/2, w/4, h/4, w/8, h/8)
 
 class Convertor:
     def __findImagesFiles(self, imagesDir):
