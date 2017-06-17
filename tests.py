@@ -41,13 +41,16 @@ class Test(unittest.TestCase):
 
     def testGraphicsMagick_getDimensions(self):
         imagePath = os.path.abspath('convert-to-guetzli.png')
+        print 'imagePath: {}'.format(imagePath)
         width, height = ctg.GraphicsMagick.getDimensions(imagePath)
         self.assertEqual(477, width)
         self.assertEqual(366, height)
 
     def testGraphicsMagick_resize(self):
         imagePath = os.path.abspath('convert-to-guetzli.png')
+        print 'imagePath: {}'.format(imagePath)
         outputPath = os.path.abspath('testGraphicsMagick_resize.png')
+        print 'outputPath: {}'.format(outputPath)
         newSize = 100
         ctg.GraphicsMagick.resize(imagePath, outputPath, newSize, newSize)
         outputImage = ctg.Image(outputPath)
