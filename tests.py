@@ -34,7 +34,7 @@
  */
 ================================================================================
 '''
-import unittest
+import unittest, os
 import convert_to_guetzli as ctg
 
 class Test(unittest.TestCase):
@@ -49,6 +49,17 @@ class Test(unittest.TestCase):
         self.assertEqual(scriptName, arguments.getScriptName())
         self.assertEqual(imagesDir, arguments.getImagesDirectory())
         self.assertIn(scriptName, arguments.getHelp())
+
+    def testImage(self):
+        imageExtention = 'png'
+        imageName = 'convert-to-guetzli'
+        imageFilename = '{}.{}'.format(imageName, imageExtention)
+        imagePath = os.path.abspath(imageFilename)
+        image = ctg.Image(imagePath)
+        self.assertEqual(imagePath, image.getPath())
+        self.assertEqual(imageFilename, image.getFilename())
+        self.assertEqual(imageName, image.getName())
+        self.assertEqual(imageExtention, image.getExtention())
 
     def testApplication(self):
         scriptName = 'convert_to_guetzli.py'
