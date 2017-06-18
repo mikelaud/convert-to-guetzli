@@ -36,28 +36,36 @@
 '''
 import unittest, os
 import convert_to_guetzli as ctg
+from mock import MagicMock
 
 class Test(unittest.TestCase):
 
     @staticmethod
-    def pwd():
-        return os.path.dirname(os.path.abspath(__file__))
+    def getFilePath(fileName):
+        pwd = os.path.dirname(os.path.abspath(__file__))
+        return os.path.join(pwd, fileName)
 
     def testGraphicsMagick_getDimensions(self):
-        imagePath = os.path.join(Test.pwd(), 'convert-to-guetzli.png') 
-        print 'imagePath: {}'.format(imagePath)
+        imagePath = Test.getFilePath('convert-to-guetzli.png') 
         width, height = ctg.GraphicsMagick.getDimensions(imagePath)
         self.assertEqual(477, width)
         self.assertEqual(366, height)
 
     def testGraphicsMagick_resize(self):
-        imagePath = os.path.abspath('convert-to-guetzli.png')
-        outputPath = os.path.abspath('testGraphicsMagick_resize.png')
+        imagePath = Test.getFilePath('convert-to-guetzli.png')
+        outputPath = Test.getFilePath('testGraphicsMagick_resize.png')
         newSize = 100
         ctg.GraphicsMagick.resize(imagePath, outputPath, newSize, newSize)
         outputImage = ctg.Image(outputPath)
         self.assertEqual(newSize, outputImage.getWidth())
         self.assertEqual(77, outputImage.getHeight())
+
+    def testGuetzli(self):
+        imagePath = Test.getFilePath('convert-to-guetzli.png')
+        outputPath = Test.getFilePath('testGuetzli.png')
+        ctg.Guetzli.convert = MagicMock(imagePath, outputPath)
+        ctg.Guetzli.convert(imagePath, outputPath)
+        ctg.Guetzli.convert.assert_called_with(imagePath, outputPath)
 
     def testArguments(self):
         scriptName = 'convert_to_guetzli.py'
@@ -74,7 +82,7 @@ class Test(unittest.TestCase):
         imageExtention = 'png'
         imageName = 'convert-to-guetzli'
         imageFilename = '{}.{}'.format(imageName, imageExtention)
-        imagePath = os.path.abspath(imageFilename)
+        imagePath = Test.getFilePath(imageFilename)
         image = ctg.Image(imagePath)
         self.assertEqual(imagePath, image.getPath())
         self.assertEqual(imageFilename, image.getFilename())

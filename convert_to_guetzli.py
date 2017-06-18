@@ -47,8 +47,12 @@ class GraphicsMagick:
         return width, height
     @staticmethod  
     def resize(imagePath, outputPath , width, height):
-        print 'gm.imagePath: {}'.format(imagePath)
         subprocess.check_call(['gm', 'convert', imagePath, '-resize', '%sx%s' % (width,height), '+profile', '*', outputPath])
+
+class Guetzli:
+    @staticmethod
+    def convert(imagePath, outputPath):
+        subprocess.check_call(['guetzli', '--quality', '84', imagePath, outputPath])
 
 class Arguments:
     def __init__(self, argv):
@@ -110,7 +114,7 @@ class Image:
         outputName = self.getName() + '.jpg'
         outputPath = os.path.join(outputDir, outputName)
         inputPath = self.getPath()
-        subprocess.check_call(['guetzli', '--quality', '84', inputPath, outputPath])
+        Guetzli.convert(inputPath, outputPath)
     def __str__(self):
         w = self.getWidth()
         h = self.getHeight()
