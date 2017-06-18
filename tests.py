@@ -52,9 +52,7 @@ class Test(unittest.TestCase):
 
     def testGraphicsMagick_resize(self):
         imagePath = os.path.abspath('convert-to-guetzli.png')
-        print 'imagePath: {}'.format(imagePath)
         outputPath = os.path.abspath('testGraphicsMagick_resize.png')
-        print 'outputPath: {}'.format(outputPath)
         newSize = 100
         ctg.GraphicsMagick.resize(imagePath, outputPath, newSize, newSize)
         outputImage = ctg.Image(outputPath)
