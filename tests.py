@@ -34,9 +34,10 @@
  */
 ================================================================================
 '''
-import unittest, os
+import unittest, os, subprocess
 import convert_to_guetzli as ctg
 from mock import MagicMock
+from mock import patch
 
 class Test(unittest.TestCase):
 
@@ -60,12 +61,14 @@ class Test(unittest.TestCase):
         self.assertEqual(newSize, outputImage.getWidth())
         self.assertEqual(77, outputImage.getHeight())
 
+    #@patch('subprocess.check_call')
     def testGuetzli(self):
         imagePath = Test.getFilePath('convert-to-guetzli.png')
         outputPath = Test.getFilePath('testGuetzli.png')
-        ctg.Guetzli.convert = MagicMock(imagePath, outputPath)
-        ctg.Guetzli.convert(imagePath, outputPath)
-        ctg.Guetzli.convert.assert_called_with(imagePath, outputPath)
+        with patch.object(subprocess, 'check_call', return_value=0) as mock_method:
+            ctg.Guetzli.convert(imagePath, outputPath)
+        args = ['guetzli', '--quality', '84', imagePath, outputPath]
+        mock_method.assert_called_once_with(args)
 
     def testArguments(self):
         scriptName = 'convert_to_guetzli.py'
