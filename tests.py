@@ -41,19 +41,34 @@ from mock import patch
 class Test(unittest.TestCase):
 
     @staticmethod
-    def getFilePath(fileName):
-        pwd = os.path.dirname(os.path.abspath(__file__))
-        return os.path.join(pwd, fileName)
+    def getInputDir():
+        return os.path.dirname(os.path.abspath(__file__))
+
+    @staticmethod
+    def getOutputDir():
+        return os.path.join(Test.getInputDir(), 'output_dir')
+
+    @staticmethod
+    def getInputPath(fileName):
+        return os.path.join(Test.getInputDir(), fileName)
+
+    @staticmethod
+    def getOutputPath(fileName):
+        return os.path.join(Test.getOutputDir(), fileName)
+
+    def setUp(self):
+        if not os.path.exists(Test.getOutputDir()):
+            os.mkdir(Test.getOutputDir())
 
     def testGraphicsMagick_getDimensions(self):
-        imagePath = Test.getFilePath('convert-to-guetzli.png') 
+        imagePath = Test.getInputPath('convert-to-guetzli.png') 
         width, height = ctg.GraphicsMagick.getDimensions(imagePath)
         self.assertEqual(477, width)
         self.assertEqual(366, height)
 
     def testGraphicsMagick_resize(self):
-        imagePath = Test.getFilePath('convert-to-guetzli.png')
-        outputPath = Test.getFilePath('testGraphicsMagick_resize.png')
+        imagePath = Test.getInputPath('convert-to-guetzli.png')
+        outputPath = Test.getOutputPath('testGraphicsMagick_resize.png')
         newSize = 100
         ctg.GraphicsMagick.resize(imagePath, outputPath, newSize, newSize)
         outputImage = ctg.Image(outputPath)
@@ -61,8 +76,8 @@ class Test(unittest.TestCase):
         self.assertEqual(77, outputImage.getHeight())
 
     def testGuetzli(self):
-        imagePath = Test.getFilePath('convert-to-guetzli.png')
-        outputPath = Test.getFilePath('testGuetzli.png')
+        imagePath = Test.getInputPath('convert-to-guetzli.png')
+        outputPath = Test.getOutputPath('testGuetzli.png')
         with patch.object(subprocess, 'check_call', return_value=0) as mock_method:
             ctg.Guetzli.convert(imagePath, outputPath)
         args = ['guetzli', '--quality', '84', imagePath, outputPath]
@@ -83,7 +98,7 @@ class Test(unittest.TestCase):
         imageExtention = 'png'
         imageName = 'convert-to-guetzli'
         imageFilename = '{}.{}'.format(imageName, imageExtention)
-        imagePath = Test.getFilePath(imageFilename)
+        imagePath = Test.getInputPath(imageFilename)
         image = ctg.Image(imagePath)
         self.assertEqual(imagePath, image.getPath())
         self.assertEqual(imageFilename, image.getFilename())
@@ -92,18 +107,19 @@ class Test(unittest.TestCase):
 
     def testImage_resizeTo(self):
         imageName = 'convert-to-guetzli'
-        imagePath = Test.getFilePath('{}.png'.format(imageName))
-        outputPath = Test.getFilePath('{}.png'.format(imageName))
+        imagePath = Test.getInputPath('{}.png'.format(imageName))
+        outputPath = Test.getOutputPath('{}.png'.format(imageName))
         outputDir = os.path.dirname(outputPath)
-        with patch.object(ctg.GraphicsMagick, 'resize', return_value=None) as mock_method:
-            image = ctg.Image(imagePath)
-            image.resizeTo(outputDir, 2)
-        mock_method.assert_called_once_with(imagePath, outputPath, 238, 183)
+        image = ctg.Image(imagePath)
+        image.resizeTo(outputDir, 2)
+        outputImage = ctg.Image(outputPath)
+        self.assertEqual(238, outputImage.getWidth())
+        self.assertEqual(183, outputImage.getHeight())        
     
     def testImage_convertToGuetzli(self):
         imageName = 'convert-to-guetzli'
-        imagePath = Test.getFilePath('{}.png'.format(imageName))
-        outputPath = Test.getFilePath('{}.jpg'.format(imageName))
+        imagePath = Test.getInputPath('{}.png'.format(imageName))
+        outputPath = Test.getOutputPath('{}.jpg'.format(imageName))
         outputDir = os.path.dirname(outputPath)
         with patch.object(ctg.Guetzli, 'convert', return_value=None) as mock_method:
             image = ctg.Image(imagePath)

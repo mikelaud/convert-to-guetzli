@@ -36,24 +36,6 @@
 '''
 import glob, os, subprocess, sys, time
 
-class GraphicsMagick:
-    @staticmethod
-    def getDimensions(imagePath):
-        def __getByIndex(dimensions, index):
-            return int(0 if index >= len(dimensions) else dimensions[index])
-        dimensions = subprocess.check_output(['gm', 'identify', '-format', '%wx%h', imagePath]).rstrip().split('x')
-        width = __getByIndex(dimensions, 0)
-        height = __getByIndex(dimensions, 1)
-        return width, height
-    @staticmethod  
-    def resize(imagePath, outputPath , width, height):
-        subprocess.check_call(['gm', 'convert', imagePath, '-resize', '%sx%s' % (width,height), '+profile', '*', outputPath])
-
-class Guetzli:
-    @staticmethod
-    def convert(imagePath, outputPath):
-        subprocess.check_call(['guetzli', '--quality', '84', imagePath, outputPath])
-
 class Arguments:
     def __init__(self, argv):
         def __getByIndex(argv, index):
@@ -72,6 +54,24 @@ class Arguments:
         return self.__imagesDirectory
     def getHelp(self):
         return 'Usage: {} <directory_with_images>'.format(self.getScriptName())
+
+class GraphicsMagick:
+    @staticmethod
+    def getDimensions(imagePath):
+        def __getByIndex(dimensions, index):
+            return int(0 if index >= len(dimensions) else dimensions[index])
+        dimensions = subprocess.check_output(['gm', 'identify', '-format', '%wx%h', imagePath]).rstrip().split('x')
+        width = __getByIndex(dimensions, 0)
+        height = __getByIndex(dimensions, 1)
+        return width, height
+    @staticmethod  
+    def resize(imagePath, outputPath , width, height):
+        subprocess.check_call(['gm', 'convert', imagePath, '-resize', '%sx%s' % (width,height), '+profile', '*', outputPath])
+
+class Guetzli:
+    @staticmethod
+    def convert(imagePath, outputPath):
+        subprocess.check_call(['guetzli', '--quality', '84', imagePath, outputPath])
 
 class Image:
     def __splitFilename(self, filename):
