@@ -60,7 +60,6 @@ class Test(unittest.TestCase):
         self.assertEqual(newSize, outputImage.getWidth())
         self.assertEqual(77, outputImage.getHeight())
 
-    #@patch('subprocess.check_call')
     def testGuetzli(self):
         imagePath = Test.getFilePath('convert-to-guetzli.png')
         outputPath = Test.getFilePath('testGuetzli.png')
@@ -91,6 +90,16 @@ class Test(unittest.TestCase):
         self.assertEqual(imageName, image.getName())
         self.assertEqual(imageExtention, image.getExtention())
 
+    def testImage_resizeTo(self):
+        imageName = 'convert-to-guetzli'
+        imagePath = Test.getFilePath('{}.png'.format(imageName))
+        outputPath = Test.getFilePath('{}.png'.format(imageName))
+        outputDir = os.path.dirname(outputPath)
+        with patch.object(ctg.GraphicsMagick, 'resize', return_value=None) as mock_method:
+            image = ctg.Image(imagePath)
+            image.resizeTo(outputDir, 2)
+        mock_method.assert_called_once_with(imagePath, outputPath, 238, 183)
+    
     def testImage_convertToGuetzli(self):
         imageName = 'convert-to-guetzli'
         imagePath = Test.getFilePath('{}.png'.format(imageName))
