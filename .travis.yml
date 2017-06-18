@@ -5,11 +5,16 @@ language: python
 python:
   - 2.7
 
+addons:
+  apt_packages:
+    - graphicsmagick
+
 install:
   - pip install codecov
 
 script:
   - python convert-to-guetzli.py || if [ $? -eq 10 ]; then (exit 0); fi
+  - ls -l /home/travis/build/mikelaud/convert-to-guetzli
   - coverage run tests.py
 
 after_success:
