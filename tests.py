@@ -44,7 +44,7 @@ class Test(unittest.TestCase):
         return os.path.dirname(os.path.abspath(__file__))
 
     def testGraphicsMagick_getDimensions(self):
-        imagePath = os.path.join(pwd(), 'convert-to-guetzli.png') 
+        imagePath = os.path.join(Test.pwd(), 'convert-to-guetzli.png') 
         print 'imagePath: {}'.format(imagePath)
         width, height = ctg.GraphicsMagick.getDimensions(imagePath)
         self.assertEqual(477, width)
