@@ -39,7 +39,6 @@ import glob, os, subprocess, sys, time
 class GraphicsMagick:
     @staticmethod
     def getDimensions(imagePath):
-        print 'gm.imagePath: {}'.format(imagePath)
         def __getByIndex(dimensions, index):
             return int(0 if index >= len(dimensions) else dimensions[index])
         dimensions = subprocess.check_output(['gm', 'identify', '-format', '%wx%h', imagePath]).rstrip().split('x')
