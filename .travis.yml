@@ -5,6 +5,10 @@ language: python
 python:
   - 2.7
 
+addons:
+  apt_packages:
+    - graphicsmagick
+
 install:
   - pip install codecov
 
